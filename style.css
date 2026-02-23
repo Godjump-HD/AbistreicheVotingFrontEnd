@@ -191,6 +191,7 @@ h1{
     top: 26vh;
     border-radius: 5px;
     border: solid 2px black;
+    opacity: 0;
 }
 
 .noLogin {
@@ -214,3 +215,4 @@ h1{
     flex-direction: column;
     width: fit-content;
 }
+
