@@ -96,8 +96,49 @@ async function vote(type) {
   }
 }
 
-function voteGood() { vote("good"); }
-function voteBad() { vote("bad"); }
+async function voteGood() {
+  if (!votingFor || !angemeldet) return alert("Bitte erst Eintrag auswählen und einloggen");
+
+  const res = await fetch("https://abistreichevoting.onrender.com/vote", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      titel: votingFor,
+      user: angemeldet,
+      type: "good"
+    })
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    console.log("Erfolgreich gevotet");
+    loadEntries(); // optional, um neue Votes direkt zu sehen
+  } else {
+    alert(data.error);
+  }
+}
+
+async function voteBad() {
+  if (!votingFor || !angemeldet) return alert("Bitte erst Eintrag auswählen und einloggen");
+
+  const res = await fetch("https://abistreichevoting.onrender.com/vote", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      titel: votingFor,
+      user: angemeldet,
+      type: "bad"
+    })
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    console.log("Erfolgreich gevotet");
+    loadEntries(); // optional
+  } else {
+    alert(data.error);
+  }
+}
 
 // --- Alle Einträge laden ---
 async function loadEntries() {
@@ -123,3 +164,4 @@ async function loadEntries() {
 
 // --- Initiales Laden ---
 loadEntries();
+
