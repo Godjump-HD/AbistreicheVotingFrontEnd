@@ -1,16 +1,24 @@
+const backendUrl = "https://abistreichevoting.onrender.com"; // Dein Render Backend
+
+// Globale Variablen
+let isLoggedIn = false;
+let votingFor = null;
+let angemeldet = null;
+
+// --- Neue Einträge speichern ---
 async function saveEntry() {
   const text = document.getElementById("text").value;
   const subject = document.getElementById("betreff").value;
 
-  const res = await fetch("https://abistreichevoting.onrender.com/save", {
+  if (!text || !subject) {
+    alert("Bitte Titel und Beschreibung ausfüllen!");
+    return;
+  }
+
+  const res = await fetch(`${backendUrl}/save`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      text: text,
-      titel: subject
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, titel: subject, votes: 0, votedBy: [] })
   });
 
   if (res.ok) {
@@ -22,88 +30,84 @@ async function saveEntry() {
   }
 }
 
-const saveBtn = document.getElementById("saveBTN");
-
-var isLoggedIn = false;
-var votingFor = null;
-var angemeldet;
-
+// --- Benutzer Login ---
 async function login() {
   const userIn = document.getElementById("userInput").value;
   const passIn = document.getElementById("passInput").value;
 
-  const res = await fetch("https://abistreichevoting.onrender.com/login");
-  const entries = await res.json();
+  if (!userIn || !passIn) {
+    alert("Bitte Benutzername und Passwort eingeben!");
+    return;
+  }
 
-  const user = entries.find(e => e.user === userIn && e.password === passIn);
+  const res = await fetch(`${backendUrl}/login`);
+  const users = await res.json();
 
-if (!user) {
-  // Login fehlgeschlagen
-  document.getElementById("userInput").classList.add("wrong");
-  document.getElementById("passInput").classList.add("wrong");
-} else {
-  angemeldet = user.name;
-  isLoggedIn = true;
-  document.getElementById("userInput").value = "";
-  document.getElementById("passInput").value = "";
-  document.getElementById("passInput").setAttribute("hidden", "hidden");
-  document.getElementById("userInput").setAttribute("hidden", "hidden");
-  document.getElementById("loginBtn").setAttribute("hidden", "hidden");
-  document.getElementById("loggedUser").classList.toggle("noLogin");
-  document.getElementById("logUser").innerText = "Willkommen " + angemeldet;
+  const user = users.find(u => u.user === userIn && u.password === passIn);
+
+  if (!user) {
+    document.getElementById("userInput").classList.add("wrong");
+    document.getElementById("passInput").classList.add("wrong");
+  } else {
+    angemeldet = user.user; // oder user.name, je nach Backend
+    isLoggedIn = true;
+
+    document.getElementById("userInput").value = "";
+    document.getElementById("passInput").value = "";
+    document.getElementById("userInput").setAttribute("hidden", "hidden");
+    document.getElementById("passInput").setAttribute("hidden", "hidden");
+    document.getElementById("loginBtn").setAttribute("hidden", "hidden");
+
+    document.getElementById("loggedUser").classList.remove("noLogin");
+    document.getElementById("logUser").innerText = "Willkommen " + angemeldet;
+  }
 }
-}
 
-async function voteGood() {
-  const res = await fetch("https://abistreichevoting.onrender.com/vote", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    titel: votingFor,
-    user: angemeldet,
-    type: "good"
-  })
-});
+// --- Voting Helper ---
+async function vote(type) {
+  if (!isLoggedIn) {
+    alert("Bitte zuerst einloggen!");
+    return;
+  }
+
+  if (!votingFor) {
+    alert("Bitte zuerst einen Vorschlag auswählen!");
+    return;
+  }
+
+  const endpoint = type === "good" ? "voteGood" : "voteBad";
+
+  const res = await fetch(`${backendUrl}/${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      titel: votingFor,
+      user: angemeldet
+    })
+  });
 
   const data = await res.json();
 
   if (res.ok) {
-    console.log("Erfolgreich gevotet");
+    console.log("Erfolgreich gevotet!");
+    loadEntries(); // Optional: Einträge neu laden, um Vote-Counts zu aktualisieren
   } else {
     alert(data.error);
   }
 }
 
-async function voteBad() {
-  const res = await fetch("https://abistreichevoting.onrender.com/vote", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    titel: votingFor,
-    user: angemeldet,
-    type: "bad"
-  })
-});
+function voteGood() { vote("good"); }
+function voteBad() { vote("bad"); }
 
-  const data = await res.json();
-
-  if (res.ok) {
-    console.log("Erfolgreich gevotet");
-  } else {
-    alert(data.error);
-  }
-}
-
-
-
+// --- Alle Einträge laden ---
 async function loadEntries() {
-  const res = await fetch("https://abistreichevoting.onrender.com/entries");
+  const res = await fetch(`${backendUrl}/entries`);
   const entries = await res.json();
 
-  const entries2 = document.getElementById("entries");
-  entries2.innerHTML = "";
+  const container = document.getElementById("entries");
+  container.innerHTML = "";
 
-  entries.forEach((entry) => {
+  entries.forEach(entry => {
     const button = document.createElement("button");
     button.innerText = entry.titel;
     button.classList.add("entry2");
@@ -113,17 +117,9 @@ async function loadEntries() {
       votingFor = entry.titel;
     });
 
-    entries2.appendChild(button);
+    container.appendChild(button);
   });
 }
 
-
+// --- Initiales Laden ---
 loadEntries();
-
-/*
-          To-Do:
-- User Log In
-- Count Votes
-
-
-*/
