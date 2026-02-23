@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Abistreiche Voting</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <h1>Abistreiche Voting</h1>
+  <div class="newEntry">
+
+    <textarea id="betreff" placeholder="Überschrift eingeben..."></textarea>
+    <textarea id="text" placeholder="Beschreibung..."></textarea>
+    <br />
+    <button class="save" id="saveBTN" onclick="saveEntry()">Speichern</button>
+    <br><br>
+    <input type="text" placeholder="Nutzer eingeben" id="userInput" class="notwrong"><br>
+    <input type="password" placeholder="Passwort eingeben..." id="passInput" class="notwrong"><br>
+    <button id="loginBtn" onclick="login()">Login</button>
+    <div class="welcome noLogin" id="loggedUser">
+      <p id="logUser"></p>
+    </div>
+  </div>
+
+  <div class="savedEntries">
+    <h2>Gespeicherte Abistreiche</h2>
+    <pre id="entries"></pre>
+  </div>
+
+  <div class="votingCon">
+    <h3>Abstimmung</h3>
+    <textarea readonly id="showDes"></textarea>
+    <div class="voting">
+      <button class="good voteBtn" onclick="voteGood()"><</button>
+          <button class="bad voteBtn" onclick="voteBad()">></button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>
