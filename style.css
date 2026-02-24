@@ -94,7 +94,7 @@ h1{
 #showDes {
     position: relative;
     top: 0px;
-    width: 250px;
+    width: 100%;
     border: none;
     cursor: default;
     resize: none;
@@ -217,6 +217,7 @@ h1{
     flex-direction: column;
     width: fit-content;
 }
+
 
 
 
