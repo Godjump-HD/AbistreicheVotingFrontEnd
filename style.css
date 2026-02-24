@@ -109,6 +109,7 @@ h1{
     background: #EDE8D0;
     border-radius: 15px;
     margin-left: 25px;
+    color: white;
 }
 
 .save {
@@ -215,4 +216,5 @@ h1{
     flex-direction: column;
     width: fit-content;
 }
+
 
