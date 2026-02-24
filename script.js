@@ -1,11 +1,11 @@
-const backendUrl = "https://abivoting-api.lostixd8.workers.dev/"; // Dein Render Backend
+const backendUrl = "https://abivoting-api.lostixd8.workers.dev";
 
 // Globale Variablen
 let isLoggedIn = false;
 let votingFor = null;
 let angemeldet = null;
 
-// --- Neue Einträge speichern ---
+// ---------------- SAVE ENTRY ----------------
 async function saveEntry() {
   const text = document.getElementById("text").value;
   const subject = document.getElementById("betreff").value;
@@ -18,52 +18,58 @@ async function saveEntry() {
   const res = await fetch(`${backendUrl}/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, titel: subject, votes: 0, votedBy: [] })
+    body: JSON.stringify({ titel: subject, text })
   });
+
+  const data = await res.json();
 
   if (res.ok) {
     document.getElementById("text").value = "";
     document.getElementById("betreff").value = "";
     loadEntries();
   } else {
-    alert("Fehler beim Speichern");
+    alert(data.error);
   }
 }
 
-// --- Benutzer Login ---
+// ---------------- LOGIN ----------------
 async function login() {
-  const userIn = document.getElementById("userInput").value;
-  const passIn = document.getElementById("passInput").value;
+  const username = document.getElementById("userInput").value;
+  const password = document.getElementById("passInput").value;
 
-  if (!userIn || !passIn) {
+  if (!username || !password) {
     alert("Bitte Benutzername und Passwort eingeben!");
     return;
   }
 
-  const res = await fetch(`${backendUrl}/login`);
-  const users = await res.json();
+  const res = await fetch(`${backendUrl}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
 
-  const user = users.find(u => u.user === userIn && u.password === passIn);
+  const data = await res.json();
 
-  if (!user) {
-    document.getElementById("userInput").classList.add("wrong");
-    document.getElementById("passInput").classList.add("wrong");
-  } else {
-    angemeldet = user.user; // oder user.name, je nach Backend
-    isLoggedIn = true;
-
-    document.getElementById("userInput").value = "";
-    document.getElementById("passInput").value = "";
-    document.getElementById("userInput").setAttribute("hidden", "hidden");
-    document.getElementById("passInput").setAttribute("hidden", "hidden");
-    document.getElementById("loginBtn").setAttribute("hidden", "hidden");
-
-    document.getElementById("loggedUser").classList.remove("noLogin");
-    document.getElementById("logUser").innerText = "Willkommen " + angemeldet;
+  if (!res.ok) {
+    alert(data.error);
+    return;
   }
+
+  angemeldet = data.user.username;
+  isLoggedIn = true;
+
+  document.getElementById("userInput").value = "";
+  document.getElementById("passInput").value = "";
+  document.getElementById("userInput").hidden = true;
+  document.getElementById("passInput").hidden = true;
+  document.getElementById("loginBtn").hidden = true;
+
+  document.getElementById("loggedUser").classList.remove("noLogin");
+  document.getElementById("logUser").innerText =
+    "Willkommen " + data.user.name;
 }
 
-// --- Voting Helper ---
+// ---------------- VOTING ----------------
 async function vote(type) {
   if (!isLoggedIn) {
     alert("Bitte zuerst einloggen!");
@@ -75,72 +81,34 @@ async function vote(type) {
     return;
   }
 
-  const endpoint = type === "good" ? "voteGood" : "voteBad";
-
-  const res = await fetch(`${backendUrl}/${endpoint}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      titel: votingFor,
-      user: angemeldet
-    })
-  });
-
-  const data = await res.json();
-
-  if (res.ok) {
-    console.log("Erfolgreich gevotet!");
-    loadEntries(); // Optional: Einträge neu laden, um Vote-Counts zu aktualisieren
-  } else {
-    alert(data.error);
-  }
-}
-
-async function voteGood() {
-  if (!votingFor || !angemeldet) return alert("Bitte erst Eintrag auswählen und einloggen");
-
-  const res = await fetch("https://abistreichevoting.onrender.com/vote", {
+  const res = await fetch(`${backendUrl}/vote`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       titel: votingFor,
       user: angemeldet,
-      type: "good"
+      type: type
     })
   });
 
   const data = await res.json();
+
   if (res.ok) {
-    console.log("Erfolgreich gevotet");
-    loadEntries(); // optional, um neue Votes direkt zu sehen
+    loadEntries();
   } else {
     alert(data.error);
   }
 }
 
-async function voteBad() {
-  if (!votingFor || !angemeldet) return alert("Bitte erst Eintrag auswählen und einloggen");
-
-  const res = await fetch("https://abistreichevoting.onrender.com/vote", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      titel: votingFor,
-      user: angemeldet,
-      type: "bad"
-    })
-  });
-
-  const data = await res.json();
-  if (res.ok) {
-    console.log("Erfolgreich gevotet");
-    loadEntries(); // optional
-  } else {
-    alert(data.error);
-  }
+function voteGood() {
+  vote("good");
 }
 
-// --- Alle Einträge laden ---
+function voteBad() {
+  vote("bad");
+}
+
+// ---------------- LOAD ENTRIES ----------------
 async function loadEntries() {
   const res = await fetch(`${backendUrl}/entries`);
   const entries = await res.json();
@@ -150,7 +118,8 @@ async function loadEntries() {
 
   entries.forEach(entry => {
     const button = document.createElement("button");
-    button.innerText = entry.titel;
+    button.innerText =
+      `${entry.titel} 👍 ${entry.votes_good} 👎 ${entry.votes_bad}`;
     button.classList.add("entry2");
 
     button.addEventListener("click", () => {
@@ -162,7 +131,5 @@ async function loadEntries() {
   });
 }
 
-// --- Initiales Laden ---
+// ---------------- INIT ----------------
 loadEntries();
-
-
