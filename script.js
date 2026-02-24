@@ -1,4 +1,4 @@
-const backendUrl = "https://abistreichevoting.onrender.com"; // Dein Render Backend
+const backendUrl = "https://abivoting-api.lostixd8.workers.dev/"; // Dein Render Backend
 
 // Globale Variablen
 let isLoggedIn = false;
@@ -164,4 +164,5 @@ async function loadEntries() {
 
 // --- Initiales Laden ---
 loadEntries();
+
 
