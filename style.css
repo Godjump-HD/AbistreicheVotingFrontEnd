@@ -104,7 +104,7 @@ h1{
 
 .savedEntries {
     position: relative;
-    width: 25%;
+    width: 25vw;
     margin-top: 25px;
     padding: 8px;
     height: 300px;
@@ -219,6 +219,7 @@ h1{
     flex-direction: column;
     width: fit-content;
 }
+
 
 
 
