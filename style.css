@@ -108,6 +108,11 @@ h1{
     color: black;
 }
 
+.entryWrapper {
+    overflow-y: auto; 
+    max-height: 200px;
+}
+
 .save {
     padding: 8px 16px;
     margin-top: 10px;
@@ -213,6 +218,7 @@ h1{
     flex-direction: column;
     width: fit-content;
 }
+
 
 
 
