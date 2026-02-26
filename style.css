@@ -216,6 +216,7 @@ h1{
 #entries {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: fit-content;
     gap: 8px;
 }
+
