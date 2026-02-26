@@ -106,6 +106,7 @@ h1{
     border-radius: 15px;
     margin-left: 25px;
     color: black;
+    overflow-y: auto; 
 }
 
 .save {
@@ -213,6 +214,7 @@ h1{
     flex-direction: column;
     width: fit-content;
 }
+
 
 
 
