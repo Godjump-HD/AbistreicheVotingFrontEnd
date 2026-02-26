@@ -109,8 +109,8 @@ h1{
 }
 
 .entryWrapper {
-    overflow-y: auto; 
     max-height: 200px;
+    overflow-y: auto; 
 }
 
 .save {
@@ -217,7 +217,9 @@ h1{
     display: flex;
     flex-direction: column;
     width: fit-content;
+    gap: 8px;
 }
+
 
 
 
