@@ -1,9 +1,3 @@
-html,
-body {
-    height: 100%;
-    margin: 0;
-}
-
 body {
     font-family: Arial, sans-serif;
 
@@ -219,6 +213,7 @@ h1{
     flex-direction: column;
     width: fit-content;
 }
+
 
 
 
