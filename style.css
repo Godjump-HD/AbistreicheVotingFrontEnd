@@ -28,14 +28,23 @@ textarea {
 h3 {
     text-align: center;
 }
-h2{
+
+h2 {
     text-align: center;
-    background: #d0d0c0;
-   hborder-radius: 5px;
+    background: #eec;
+    border-radius: 25px;
+    width: fit-content;
+    margin: auto;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: solid 5px #aaf;
+    border-style: groove;
 }
-h1{
+
+h1 {
     position: relative;
-    transform: translate(-50%,0);
+    transform: translate(-50%, 0);
     width: fit-content;
     background: #f5e5c0;
     padding: 8px;
@@ -49,7 +58,7 @@ h1{
 .votingCon {
     position: relative;
     background: white;
-    left: 490px;
+    left: 50vw;
     top: -316px;
     border-radius: 15px;
     padding: 8px;
@@ -115,7 +124,7 @@ h1{
 
 .entryWrapper {
     max-height: 200px;
-    overflow-y: auto; 
+    overflow-y: auto;
 }
 
 .save {
@@ -159,7 +168,7 @@ h1{
     background: cornflowerblue;
     color: white;
     font-weight: bold;
-    font-size:medium;
+    font-size: medium;
 }
 
 #userInput {
@@ -185,10 +194,16 @@ h1{
 
 #loginBtn {
     margin-top: 20px;
-    width: 50px;
-    height: 25px;
-    border-radius: 3px;
-    border: solid 1px lavender;
+    width: 75px;
+    height: 35px;
+    border-radius: 5px;
+    background-color: #42dd42;
+    color: #060;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    border: solid 3px #22bd22;
+    border-style: inset;
 }
 
 .welcome {
@@ -224,7 +239,3 @@ h1{
     width: 100%;
     gap: 8px;
 }
-
-
-
-
