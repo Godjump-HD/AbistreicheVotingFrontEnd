@@ -30,7 +30,8 @@ h3 {
 }
 h2{
     text-align: center;
-    background: #f5e5c0;
+    background: #d0d0c0;
+   hborder-radius: 5px;
 }
 h1{
     position: relative;
@@ -223,6 +224,7 @@ h1{
     width: 100%;
     gap: 8px;
 }
+
 
 
 
