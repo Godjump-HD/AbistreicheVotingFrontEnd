@@ -28,6 +28,10 @@ textarea {
 h3 {
     text-align: center;
 }
+h2{
+    text-align: center;
+    background: #f5e5c0;
+}
 h1{
     position: relative;
     transform: translate(-50%,0);
@@ -219,5 +223,6 @@ h1{
     width: 100%;
     gap: 8px;
 }
+
 
 
