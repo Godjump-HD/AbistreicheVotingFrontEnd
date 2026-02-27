@@ -124,7 +124,7 @@ h1 {
 
 .entryWrapper {
     margin-top: 8px;
-    max-height: 200px;
+    max-height: 235px;
     overflow-y: auto;
 }
 
@@ -240,4 +240,5 @@ h1 {
     width: 100%;
     gap: 8px;
 }
+
 
